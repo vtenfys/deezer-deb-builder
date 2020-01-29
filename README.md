@@ -1,10 +1,10 @@
-# Notion DEB Builder
+# Deezer DEB Builder
 
-Build Notion packages for Ubuntu/Debian, using resources extracted from Notion's Windows or macOS packages.
+Build Deezer packages for Ubuntu/Debian, using resources extracted from Deezer's Windows or macOS packages.
 
 ## Prebuilt packages
 
-See [Releases](https://github.com/davidbailey00/notion-deb-builder/releases)
+See [Releases](https://github.com/davidbailey00/deezer-deb-builder/releases)
 
 ## Requirements
 
@@ -34,10 +34,10 @@ See [Releases](https://github.com/davidbailey00/notion-deb-builder/releases)
    brew install p7zip imagemagick fakeroot dpkg
    ```
 
-4. Download the latest Notion Windows or macOS installer, as `notion.exe` or `notion.dmg` respectively, e.g. using wget:
+4. Download the latest Deezer Windows or macOS installer, as `deezer.exe` or `deezer.dmg` respectively, e.g. using wget:
 
    ```sh
-   wget 'https://desktop-release.notion-static.com/Notion%20Setup%202.0.6.exe' -o notion.exe
+   wget 'https://e-cdn-content.dzcdn.net/builds/deezer-desktop/8cF2rAuKxLcU1oMDmCYm8Uiqe19Ql0HTySLssdzLkQ9ZWHuDTp2JBtQOvdrFzWPA/darwin/x64/4.18.30/DeezerDesktop_4.18.30.dmg' -o deezer.dmg
    ```
 
 # Build

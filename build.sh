@@ -2,8 +2,8 @@
 set -e
 
 ELECTRON_VERSION=6.1.7
-NOTION_BINARY=notion.exe
-NOTION_DMG=notion.dmg
+DEEZER_BINARY=deezer.exe
+DEEZER_DMG=deezer.dmg
 
 if [[ $1 != windows && $1 != mac ]]; then
   echo Please specify whether you would like to build a DEB package using \
@@ -12,19 +12,19 @@ if [[ $1 != windows && $1 != mac ]]; then
   exit 1
 fi
 
-# Check for Notion Windows installer
-if [ "$1" == windows ] && ! [ -f $NOTION_BINARY ]; then
-  echo Notion installer missing!
-  echo Please download Notion for Windows from https://www.notion.so/desktop \
-    and place the installer in this directory as $NOTION_BINARY
+# Check for Deezer Windows installer
+if [ "$1" == windows ] && ! [ -f $DEEZER_BINARY ]; then
+  echo Deezer installer missing!
+  echo Please download Deezer for Windows from https://www.deezer.com/en/download \
+    and place the installer in this directory as $DEEZER_BINARY
   exit 1
 fi
 
-# Check for Notion macOS installer
-if [ "$1" == mac ] && ! [ -f $NOTION_DMG ]; then
-  echo Notion installer missing!
-  echo Please download Notion for macOS from https://www.notion.so/desktop \
-    and place the installer in this directory as $NOTION_DMG
+# Check for Deezer macOS installer
+if [ "$1" == mac ] && ! [ -f $DEEZER_DMG ]; then
+  echo Deezer installer missing!
+  echo Please download Deezer for macOS from https://www.deezer.com/en/download \
+    and place the installer in this directory as $DEEZER_DMG
   exit 1
 fi
 
@@ -49,14 +49,14 @@ done
 mkdir -p build
 
 if [ "$1" == windows ]; then
-  # Extract the Notion executable
-  if ! [ -f "build/notion/\$PLUGINSDIR/app-64.7z" ]; then
-    7z x $NOTION_BINARY -obuild/notion
+  # Extract the Deezer executable
+  if ! [ -f "build/deezer/\$PLUGINSDIR/app-64.7z" ]; then
+    7z x $DEEZER_BINARY -obuild/deezer
   fi
 
   # Extract the app bundle
   if ! [ -f build/bundle/resources/app.asar ]; then
-    7z x "build/notion/\$PLUGINSDIR/app-64.7z" -obuild/bundle
+    7z x "build/deezer/\$PLUGINSDIR/app-64.7z" -obuild/bundle
   fi
 
   # Extract the app container
@@ -64,25 +64,20 @@ if [ "$1" == windows ]; then
     asar extract build/bundle/resources/app.asar build/app
   fi
 elif [ "$1" == mac ]; then
-  # Extract the Notion disk image
-  if ! [ -f 'build/notion/Notion Installer/Notion.app/Contents/Resources/app.asar' ]; then
-    7z x $NOTION_DMG -obuild/notion
+  # Extract the Deezer disk image
+  if ! [ -f 'build/deezer/Deezer Installer/Deezer.app/Contents/Resources/app.asar' ]; then
+    7z x $DEEZER_DMG -obuild/deezer
   fi
 
   if ! [ -d build/app ]; then
     asar extract \
-      'build/notion/Notion Installer/Notion.app/Contents/Resources/app.asar' \
+      'build/deezer/Deezer Installer/Deezer.app/Contents/Resources/app.asar' \
       build/app
   fi
 fi
 
 # Install NPM dependencies
 if ! [ -f build/app/package-lock.json ]; then
-  # Replace package name to fix some issues:
-  # - conflicting package in Ubuntu repos called "notion"
-  # - icon not showing up properly when only the DEB package is renamed
-  sed -i 's/"Notion"/"notion-desktop"/' build/app/package.json
-
   # Remove existing node_modules
   rm -rf build/app/node_modules
 
@@ -110,7 +105,7 @@ if ! [ -d build/dist ]; then
     --arch x64 \
     --out build/dist \
     --electron-version $ELECTRON_VERSION \
-    --executable-name notion-desktop
+    --executable-name deezer-desktop
 fi
 
 # Create Debian package
@@ -118,5 +113,5 @@ electron-installer-debian \
   --src build/dist/app-linux-x64 \
   --dest out \
   --arch amd64 \
-  --options.productName Notion \
+  --options.productName Deezer \
   --options.icon build/dist/app-linux-x64/resources/app/icon.png
