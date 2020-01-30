@@ -2,6 +2,7 @@
 set -e
 
 ELECTRON_VERSION=6.1.7
+DEEZER_VERSION=4.18.30
 DEEZER_BINARY=deezer.exe
 DEEZER_DMG=deezer.dmg
 
@@ -15,7 +16,8 @@ fi
 # Check for Deezer Windows installer
 if [ "$1" == windows ] && ! [ -f $DEEZER_BINARY ]; then
   echo Deezer installer missing!
-  echo Please download Deezer for Windows from https://www.deezer.com/en/download \
+  echo Please download Deezer for Windows from \
+    'https://www.deezer.com/desktop/download?platform=win32&architecture=x86' \
     and place the installer in this directory as $DEEZER_BINARY
   exit 1
 fi
@@ -23,7 +25,8 @@ fi
 # Check for Deezer macOS installer
 if [ "$1" == mac ] && ! [ -f $DEEZER_DMG ]; then
   echo Deezer installer missing!
-  echo Please download Deezer for macOS from https://www.deezer.com/en/download \
+  echo Please download Deezer for macOS from \
+    'https://www.deezer.com/desktop/download?platform=darwin&architecture=x64' \
     and place the installer in this directory as $DEEZER_DMG
   exit 1
 fi
@@ -38,7 +41,7 @@ check-command() {
 
 commands=(
   node npm asar electron-packager electron-installer-debian
-  7z convert fakeroot dpkg
+  7z icns2png fakeroot dpkg
 )
 
 for command in "${commands[@]}"; do
@@ -56,7 +59,7 @@ if [ "$1" == windows ]; then
 
   # Extract the app bundle
   if ! [ -f build/bundle/resources/app.asar ]; then
-    7z x "build/deezer/\$PLUGINSDIR/app-64.7z" -obuild/bundle
+    7z x "build/deezer/\$PLUGINSDIR/app-32.7z" -obuild/bundle
   fi
 
   # Extract the app container
@@ -65,13 +68,13 @@ if [ "$1" == windows ]; then
   fi
 elif [ "$1" == mac ]; then
   # Extract the Deezer disk image
-  if ! [ -f 'build/deezer/Deezer Installer/Deezer.app/Contents/Resources/app.asar' ]; then
+  if ! [ -f "build/deezer/Deezer $DEEZER_VERSION/Deezer.app/Contents/Resources/app.asar" ]; then
     7z x $DEEZER_DMG -obuild/deezer
   fi
 
   if ! [ -d build/app ]; then
     asar extract \
-      'build/deezer/Deezer Installer/Deezer.app/Contents/Resources/app.asar' \
+      "build/deezer/Deezer $DEEZER_VERSION/Deezer.app/Contents/Resources/app.asar" \
       build/app
   fi
 fi
@@ -80,6 +83,9 @@ fi
 if ! [ -f build/app/package-lock.json ]; then
   # Remove existing node_modules
   rm -rf build/app/node_modules
+
+  # Remove unsupported electron-media-service package
+  sed -i '/electron-media-service/d' build/app/package.json
 
   # Configure build settings
   # See https://www.electronjs.org/docs/tutorial/using-native-node-modules
@@ -93,9 +99,11 @@ if ! [ -f build/app/package-lock.json ]; then
   HOME=~/.electron-gyp npm install --prefix build/app
 fi
 
-# Convert icon.ico to PNG
-if ! [ -f build/app/icon.png ]; then
-  convert 'build/app/icon.ico[0]' build/app/icon.png
+# Convert Deezer.icns to PNG
+if ! [ -f build/app/Deezer_512x512x32.png ]; then
+  icns2png -x -s 512x512 \
+    "build/deezer/Deezer $DEEZER_VERSION/Deezer.app/Contents/Resources/Deezer.icns" \
+    -o build/app
 fi
 
 # Create Electron distribution
@@ -108,10 +116,18 @@ if ! [ -d build/dist ]; then
     --executable-name deezer-desktop
 fi
 
+# Include additional required icon file
+if ! [ -f build/dist/app-linux-x64/resources/linux/systray.png ]; then
+  mkdir -p build/dist/app-linux-x64/resources/linux
+  cp build/app/Deezer_512x512x32.png \
+    build/dist/app-linux-x64/resources/linux/systray.png
+fi
+
 # Create Debian package
 electron-installer-debian \
   --src build/dist/app-linux-x64 \
   --dest out \
   --arch amd64 \
   --options.productName Deezer \
-  --options.icon build/dist/app-linux-x64/resources/app/icon.png
+  --options.icon build/dist/app-linux-x64/resources/app/Deezer_512x512x32.png \
+  --options.desktopTemplate "$PWD/desktop.ejs"

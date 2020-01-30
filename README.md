@@ -20,24 +20,24 @@ See [Releases](https://github.com/davidbailey00/deezer-deb-builder/releases)
    npm -g install asar electron-packager electron-installer-debian
    ```
 
-3. Install packages required for `7z`, `convert`, `fakeroot` and `dpkg`.
+3. Install packages required for `7z`, `icns2png`, `fakeroot` and `dpkg`.
 
    Using Ubuntu or Debian:
 
    ```sh
-   sudo apt install p7zip-full imagemagick fakeroot
+   sudo apt install p7zip-full icnsutils fakeroot
    ```
 
    Or, using macOS:
 
    ```sh
-   brew install p7zip imagemagick fakeroot dpkg
+   brew install p7zip libicns fakeroot dpkg
    ```
 
 4. Download the latest Deezer Windows or macOS installer, as `deezer.exe` or `deezer.dmg` respectively, e.g. using wget:
 
    ```sh
-   wget 'https://e-cdn-content.dzcdn.net/builds/deezer-desktop/8cF2rAuKxLcU1oMDmCYm8Uiqe19Ql0HTySLssdzLkQ9ZWHuDTp2JBtQOvdrFzWPA/darwin/x64/4.18.30/DeezerDesktop_4.18.30.dmg' -o deezer.dmg
+   wget 'https://e-cdn-content.dzcdn.net/builds/deezer-desktop/8cF2rAuKxLcU1oMDmCYm8Uiqe19Ql0HTySLssdzLkQ9ZWHuDTp2JBtQOvdrFzWPA/darwin/x64/4.18.30/DeezerDesktop_4.18.30.dmg' -O deezer.dmg
    ```
 
 # Build
