@@ -6,15 +6,15 @@ DEEZER_VERSION=4.18.50
 DEEZER_BINARY=deezer.exe
 DEEZER_DMG=deezer.dmg
 
-if [[ $1 != windows && $1 != mac ]]; then
+if [[ $1 != win && $1 != mac ]]; then
   echo Please specify whether you would like to build a DEB package using \
     Windows or macOS sources
-  echo Example: ./build.sh windows
+  echo Example: ./build.sh win
   exit 1
 fi
 
 # Check for Deezer Windows installer
-if [ "$1" == windows ] && ! [ -f $DEEZER_BINARY ]; then
+if [ "$1" == win ] && ! [ -f $DEEZER_BINARY ]; then
   echo Deezer installer missing!
   echo Please download Deezer for Windows from \
     'https://www.deezer.com/desktop/download?platform=win32&architecture=x86' \
@@ -51,7 +51,7 @@ done
 # Setup the build directory
 mkdir -p build
 
-if [ "$1" == windows ]; then
+if [ "$1" == win ]; then
   # Extract the Deezer executable
   if ! [ -f "build/deezer/\$PLUGINSDIR/app-64.7z" ]; then
     7z x $DEEZER_BINARY -obuild/deezer
