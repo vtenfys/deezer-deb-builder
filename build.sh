@@ -87,6 +87,9 @@ if ! [ -f build/app/package-lock.json ]; then
   # Remove unsupported electron-media-service package
   sed -i '/electron-media-service/d' build/app/package.json
 
+  # Include source platform in version string
+  sed -i "s/${DEEZER_VERSION//./\\.}/$DEEZER_VERSION-$1/" build/app/package.json
+
   # Configure build settings
   # See https://www.electronjs.org/docs/tutorial/using-native-node-modules
   export npm_config_target=$ELECTRON_VERSION
