@@ -2,7 +2,7 @@
 set -e
 
 ELECTRON_VERSION=6.1.7
-DEEZER_VERSION=4.18.50
+DEEZER_VERSION=4.20.0
 DEEZER_BINARY=deezer.exe
 DEEZER_DMG=deezer.dmg
 
@@ -105,11 +105,12 @@ fi
 # Convert Deezer.icns to PNG
 if ! [ -f build/app/Deezer_512x512x32.png ]; then
   macos_icon="build/deezer/Deezer $DEEZER_VERSION/Deezer.app/Contents/Resources/Deezer.icns"
-  if [ -f "$macos_icon" ]; then
-    icns2png -x -s 512x512 "$macos_icon" -o build/app
-  else
+  #if [ -f "$macos_icon" ]; then
+    # Can't find 512x512 only 128x128
+    #icns2png -x -s 512x512 "$macos_icon" -o build/app
+  #else
     cp Deezer_512x512x32.png build/app
-  fi
+  #fi
 fi
 
 # Create Electron distribution

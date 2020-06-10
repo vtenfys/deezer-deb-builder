@@ -36,8 +36,16 @@ See [Releases](https://github.com/davidbailey00/deezer-deb-builder/releases)
 
 4. Download the latest Deezer Windows or macOS installer, as `deezer.exe` or `deezer.dmg` respectively, e.g. using wget:
 
+   MacOS
    ```sh
    wget https://e-cdn-content.dzcdn.net/builds/deezer-desktop/8cF2rAuKxLcU1oMDmCYm8Uiqe19Ql0HTySLssdzLkQ9ZWHuDTp2JBtQOvdrFzWPA/darwin/x64/4.20.0/DeezerDesktop_4.20.0.dmg' -O deezer.dmg
+   ```
+
+   or
+
+   Windows
+   ```sh 
+   wget https://e-cdn-content.dzcdn.net/builds/deezer-desktop/8cF2rAuKxLcU1oMDmCYm8Uiqe19Ql0HTySLssdzLkQ9ZWHuDTp2JBtQOvdrFzWPA/win32/x86/4.19.20/DeezerDesktopSetup_4.19.20.exe -O deezer.exe
    ```
 
 # Build
