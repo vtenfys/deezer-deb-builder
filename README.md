@@ -1,3 +1,7 @@
+Project is no longer maintained as I no longer use Linux or Deezer. I will continue to merge PRs from users.
+
+---
+
 # Deezer DEB Builder
 
 Build Deezer packages for Ubuntu/Debian, using resources extracted from Deezer's Windows or macOS packages.
